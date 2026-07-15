@@ -1,0 +1,15 @@
+{
+    "extends": "@vue/tsconfig/tsconfig.dom.json",
+    "include": [
+        "resources/js/**/*.ts",
+        "resources/js/**/*.d.ts",
+        "resources/js/**/*.vue"
+    ],
+    "compilerOptions": {
+        "ignoreDeprecations": "6.0",
+        "baseUrl": ".",
+        "paths": {
+            "@/*": ["resources/js/*"]
+        }
+    }
+}
