@@ -9,15 +9,21 @@ class JoinRequestController extends Controller
 {
     public function store(Post $post)
     {
-        abort_if($post->user_id === auth()->id(), 403, 'You cannot request to join your own post.');
+        if ($post->user_id === auth()->id()) {
+            return back()->with('error', 'You cannot request to join your own post.');
+        }
 
-        abort_if($post->status !== 'open', 403, 'This lobby is no longer open.');
+        if ($post->status !== 'open') {
+            return back()->with('error', 'This lobby is no longer open.');
+        }
 
         $alreadyRequested = JoinRequest::where('post_id', $post->id)
             ->where('user_id', auth()->id())
             ->exists();
 
-        abort_if($alreadyRequested, 409, 'You have already requested to join this lobby.');
+        if ($alreadyRequested) {
+            return back()->with('error', 'You have already requested to join this lobby.');
+        }
 
         JoinRequest::create([
             'post_id' => $post->id,
@@ -25,7 +31,7 @@ class JoinRequestController extends Controller
             'status' => 'pending',
         ]);
 
-        return redirect()->back();
+        return back()->with('success', 'Request sent!');
     }
 
     public function accept(JoinRequest $joinRequest)

@@ -1,3 +1,11 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+@theme {
+    --color-lfg-bg: #0a0a0f;
+    --color-lfg-surface: #131318;
+    --color-lfg-border: #232330;
+    --color-lfg-pink: #ff2e88;
+    --color-lfg-cyan: #00e5ff;
+    --color-lfg-muted: #8a8a96;
+    --color-lfg-text: #e8e8ed;
+}
