@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\JoinRequestController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
@@ -28,6 +29,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/posts/create', [PostController::class, 'create'])->name('posts.create');
     Route::post('/posts', [PostController::class, 'store'])->name('posts.store');
+    Route::post('/posts/{post}/join-requests', [JoinRequestController::class, 'store'])->name('join-requests.store');
 });
 
 require __DIR__.'/auth.php';
