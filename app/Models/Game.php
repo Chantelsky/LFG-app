@@ -38,6 +38,8 @@ class Game extends Model
 {
     use HasFactory;
 
+    protected $fillable = ['name', 'slug', 'igdb_id', 'cover_art', 'is_custom'];
+
     public function posts()
     {
         return $this->hasMany(Post::class);

@@ -38,11 +38,13 @@ test('a user cannot request to join their own post', function () {
         'title' => 'Need duo',
         'comm_preference' => 'mic_optional',
         'join_mode' => 'manual_review',
+        'party_size' => 5,
     ]);
 
     $response = $this->actingAs($host)->post("/posts/{$post->id}/join-requests");
 
-    $response->assertForbidden();
+    $response->assertRedirect();
+    $response->assertSessionHas('error', 'You cannot request to join your own post.');
 });
 
 test('a user cannot request to join the same post twice', function () {
@@ -56,12 +58,14 @@ test('a user cannot request to join the same post twice', function () {
         'title' => 'Need duo',
         'comm_preference' => 'mic_optional',
         'join_mode' => 'manual_review',
+        'party_size' => 5,
     ]);
 
     $this->actingAs($requester)->post("/posts/{$post->id}/join-requests");
     $response = $this->actingAs($requester)->post("/posts/{$post->id}/join-requests");
 
-    $response->assertStatus(409);
+    $response->assertRedirect();
+    $response->assertSessionHas('error', 'You have already requested to join this lobby.');
 });
 
 test('a user cannot request to join a closed post', function () {
@@ -75,10 +79,12 @@ test('a user cannot request to join a closed post', function () {
         'title' => 'Need duo',
         'comm_preference' => 'mic_optional',
         'join_mode' => 'manual_review',
+        'party_size' => 5,
         'status' => 'closed',
     ]);
 
     $response = $this->actingAs($requester)->post("/posts/{$post->id}/join-requests");
 
-    $response->assertForbidden();
+    $response->assertRedirect();
+    $response->assertSessionHas('error', 'This lobby is no longer open.');
 });

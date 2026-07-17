@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\GameController;
 use App\Http\Controllers\JoinRequestController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
@@ -28,9 +29,11 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::get('/my-posts', [PostController::class, 'myPosts'])->name('posts.my-posts');
-    Route::get('/posts/create', [PostController::class, 'create'])->name('posts.create');
     Route::post('/posts', [PostController::class, 'store'])->name('posts.store');
     Route::post('/posts/{post}/join-requests', [JoinRequestController::class, 'store'])->name('join-requests.store');
+
+    Route::get('/games/search', [GameController::class, 'search'])->name('games.search');
+
     Route::patch('/join-requests/{joinRequest}/accept', [JoinRequestController::class, 'accept'])->name('join-requests.accept');
     Route::patch('/join-requests/{joinRequest}/decline', [JoinRequestController::class, 'decline'])->name('join-requests.decline');
 });
