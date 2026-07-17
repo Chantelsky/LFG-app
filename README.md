@@ -1,58 +1,79 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# LFG — Looking for Group
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A matchmaking app for gamers to find teammates by game, skill level, region, timezone, and voice comm preference — built as a portfolio project to practice Laravel, Vue 3, and TypeScript.
 
-## About Laravel
+## Tech Stack
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- **Backend:** PHP, Laravel, MySQL, REST APIs
+- **Frontend:** Vue 3, TypeScript, Tailwind CSS, Inertia.js
+- **Real-time:** Pusher/Soketi + Laravel Echo (planned)
+- **Payments:** Stripe (planned)
+- **Game data:** IGDB API (via Twitch OAuth)
+- **Testing:** Pest
+- **Local dev:** Docker + Laravel Sail (MySQL)
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Features
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- **Browse open lobbies** — filter and view posts from other players looking for a group
+- **Create a post** — search for a game via a live IGDB-backed combobox (with automatic fallback to a custom game entry if it's not on IGDB), set skill/rank, region, timezone, availability, voice comm preference, party size, and join mode (auto-accept or manual review)
+- **Request to join** — send a join request to an open lobby, with guards against joining your own post, duplicate requests, and closed lobbies
+- **Accept / decline requests** — hosts manage incoming requests from their own posts; accepting automatically fills the lobby when party size is reached
+- **Toast notifications** — flash messages for success/error states, driven by Inertia's request lifecycle
 
-## Learning Laravel
+## Setup
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### Requirements
+- PHP 8.2+
+- Composer
+- Node.js + npm
+- Docker Desktop (with WSL2 integration, if on Windows)
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
-
-## Agentic Development
-
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+### Installation
 
 ```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+composer install
+npm install
+cp .env.example .env
+php artisan key:generate
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+### Database (via Sail)
 
-## Contributing
+```bash
+composer require laravel/sail --dev
+php artisan sail:install
+./vendor/bin/sail up -d
+php artisan migrate --seed
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### IGDB API credentials
 
-## Code of Conduct
+Register an app at [dev.twitch.tv/console/apps](https://dev.twitch.tv/console/apps) (Confidential client type), then add to `.env`:
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+```bash
+IGDB_CLIENT_ID=your_client_id
+IGDB_CLIENT_SECRET=your_client_secret
+```
 
-## Security Vulnerabilities
+### Run the app
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+```bash
+composer run dev
+```
 
-## License
+This starts the PHP server, queue listener, log tailing, and Vite dev server together. Visit `http://127.0.0.1:8000`.
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## Testing
+
+```bash
+php artisan test
+```
+
+## Roadmap
+
+- [ ] Single post view (roster management, leave/remove members)
+- [ ] Post-session rating prompt (win/loss + teammate feedback)
+- [ ] Reputation and reporting system
+- [ ] Real-time chat between matched players
+- [ ] Stripe premium tier (priority posts, unlimited listings)
+- [ ] Visual styling pass to match the neon/dark design direction
