@@ -1,4 +1,4 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 @theme {
     --color-lfg-bg: #0a0a0f;
@@ -6,6 +6,21 @@
     --color-lfg-border: #232330;
     --color-lfg-pink: #ff2e88;
     --color-lfg-cyan: #00e5ff;
+    --color-lfg-orange: #ff5722;
     --color-lfg-muted: #8a8a96;
     --color-lfg-text: #e8e8ed;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+    width: 8px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: #0a0a0f;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #232330;
+    border-radius: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #2a2a35;
 }

@@ -18,7 +18,7 @@ const currentMessage = ref<string | null>(null);
 let timeoutId: ReturnType<typeof setTimeout> | null = null;
 
 const colorClasses = computed(() =>
-    props.type === 'error' ? 'border-lfg-pink text-lfg-pink' : 'border-lfg-cyan text-lfg-cyan'
+    props.type === 'error' ? 'border-lfg-orange text-lfg-orange' : 'border-lfg-cyan text-lfg-cyan'
 );
 
 function showIfPresent() {
