@@ -27,4 +27,36 @@ class JoinRequestController extends Controller
 
         return redirect()->back();
     }
+
+    public function accept(JoinRequest $joinRequest)
+    {
+        $post = $joinRequest->post;
+
+        abort_if($post->user_id !== auth()->id(), 403, 'Only the host can accept requests.');
+
+        abort_if($joinRequest->status !== 'pending', 409, 'This request has already been handled.');
+
+        $joinRequest->update(['status' => 'accepted']);
+
+        $post->increment('current_members');
+
+        if ($post->current_members >= $post->party_size) {
+            $post->update(['status' => 'filled']);
+        }
+
+        return redirect()->back();
+    }
+
+    public function decline(JoinRequest $joinRequest)
+    {
+        $post = $joinRequest->post;
+
+        abort_if($post->user_id !== auth()->id(), 403, 'Only the host can decline requests.');
+
+        abort_if($joinRequest->status !== 'pending', 409, 'This request has already been handled.');
+
+        $joinRequest->update(['status' => 'declined']);
+
+        return redirect()->back();
+    }
 }

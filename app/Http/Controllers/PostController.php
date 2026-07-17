@@ -49,4 +49,16 @@ class PostController extends Controller
 
         return redirect()->route('posts.index');
     }
+
+    public function myPosts()
+    {
+        $posts = Post::with('game', 'joinRequests.user')
+            ->where('user_id', auth()->id())
+            ->latest()
+            ->get();
+
+        return Inertia::render('Posts/MyPosts', [
+            'posts' => $posts,
+        ]);
+    }
 }
