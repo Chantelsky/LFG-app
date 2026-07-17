@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted } from "vue";
-import { router, usePage } from "@inertiajs/vue3";
+import { ref, computed, onMounted, onUnmounted } from 'vue';
+import { router, usePage } from '@inertiajs/vue3';
 
 const props = defineProps<{
-    type: "error" | "success";
+    type: 'error' | 'success';
 }>();
 
 const page = usePage<{
@@ -18,9 +18,7 @@ const currentMessage = ref<string | null>(null);
 let timeoutId: ReturnType<typeof setTimeout> | null = null;
 
 const colorClasses = computed(() =>
-    props.type === "error"
-        ? "border-lfg-pink text-lfg-pink"
-        : "border-lfg-cyan text-lfg-cyan",
+    props.type === 'error' ? 'border-lfg-pink text-lfg-pink' : 'border-lfg-cyan text-lfg-cyan'
 );
 
 function showIfPresent() {
@@ -40,7 +38,7 @@ let removeListener: (() => void) | null = null;
 
 onMounted(() => {
     showIfPresent();
-    removeListener = router.on("finish", showIfPresent);
+    removeListener = router.on('finish', showIfPresent);
 });
 
 onUnmounted(() => {
@@ -60,7 +58,7 @@ onUnmounted(() => {
         <div
             v-if="visible"
             :class="colorClasses"
-            class="fixed top-4 left-1/2 -translate-x-1/2 bg-lfg-surface border text-sm px-4 py-3 rounded shadow-lg z-50"
+            class="bg-lfg-surface fixed top-4 left-1/2 z-50 -translate-x-1/2 rounded border px-4 py-3 text-sm shadow-lg"
         >
             {{ currentMessage }}
         </div>
