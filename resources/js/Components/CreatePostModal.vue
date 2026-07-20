@@ -11,12 +11,19 @@ const emit = defineEmits<{
     close: [];
 }>();
 
-const selectedGame = ref<{ igdb_id: number | null; name: string; coverUrl: string | null }>({
+const selectedGame = ref<{
+    igdb_id: number | null;
+    name: string;
+    coverUrl: string | null;
+    artworkUrl: string | null;
+}>({
     igdb_id: null,
     name: '',
     coverUrl: null,
     artworkUrl: null,
 });
+
+const roleInput = ref('');
 
 const form = useForm({
     game_name: '',
@@ -31,7 +38,20 @@ const form = useForm({
     comm_preference: 'mic_optional',
     join_mode: 'manual_review',
     party_size: 5,
+    roles_needed: [] as string[],
 });
+
+function addRole() {
+    const trimmed = roleInput.value.trim();
+    if (trimmed && !form.roles_needed.includes(trimmed)) {
+        form.roles_needed.push(trimmed);
+    }
+    roleInput.value = '';
+}
+
+function removeRole(index: number) {
+    form.roles_needed.splice(index, 1);
+}
 
 function submit() {
     form.transform((data) => ({
@@ -43,7 +63,8 @@ function submit() {
     })).post('/posts', {
         onSuccess: () => {
             form.reset();
-            selectedGame.value = { igdb_id: null, name: '', coverUrl: null };
+            selectedGame.value = { igdb_id: null, name: '', coverUrl: null, artworkUrl: null };
+            roleInput.value = '';
             emit('close');
         },
     });
@@ -53,6 +74,7 @@ function close() {
     form.reset();
     form.clearErrors();
     selectedGame.value = { igdb_id: null, name: '', coverUrl: null, artworkUrl: null };
+    roleInput.value = '';
     emit('close');
 }
 </script>
@@ -66,17 +88,16 @@ function close() {
         >
             <div class="mb-1 flex items-center justify-between">
                 <h2 class="text-lfg-text text-xl font-medium tracking-wide uppercase">
-                    <span class="text-lfg-pink">Create a Lobby</span>
+                    <span class="text-lfg-pink">＋</span> Create a Lobby
                 </h2>
                 <button @click="close" class="text-lfg-muted hover:text-lfg-text text-sm">✕</button>
             </div>
-
             <p class="text-lfg-muted mb-6 text-sm">Tell the lobby what you're looking for.</p>
 
             <form @submit.prevent="submit" class="space-y-5">
                 <div class="flex items-stretch gap-4">
                     <div
-                        class="border-lfg-border bg-lfg-bg w-24 shrink-0 overflow-hidden rounded-md border"
+                        class="border-lfg-border bg-lfg-bg w-24 flex-shrink-0 overflow-hidden rounded-md border"
                     >
                         <img
                             v-if="selectedGame.coverUrl"
@@ -115,10 +136,7 @@ function close() {
                                 v-model="selectedGame"
                                 :has-error="!!form.errors.game_name"
                             />
-                            <p
-                                v-if="form.errors.game_name"
-                                class="text-lfg-orange mt-1 text-xs font-medium"
-                            >
+                            <p v-if="form.errors.game_name" class="text-lfg-orange mt-1 text-xs">
                                 {{ form.errors.game_name }}
                             </p>
                         </div>
@@ -139,10 +157,7 @@ function close() {
                                         : 'border-lfg-border focus:border-lfg-cyan focus:ring-lfg-cyan',
                                 ]"
                             />
-                            <p
-                                v-if="form.errors.title"
-                                class="text-lfg-orange mt-1 text-xs font-medium"
-                            >
+                            <p v-if="form.errors.title" class="text-lfg-orange mt-1 text-xs">
                                 {{ form.errors.title }}
                             </p>
                         </div>
@@ -159,6 +174,44 @@ function close() {
                         placeholder="e.g. Immortal 1, Diamond II"
                         class="border-lfg-border bg-lfg-bg text-lfg-text placeholder-lfg-muted focus:border-lfg-cyan focus:ring-lfg-cyan w-full rounded-md border p-2.5 text-sm focus:ring-1 focus:outline-none"
                     />
+                </div>
+
+                <div>
+                    <label class="text-lfg-muted mb-1.5 block text-xs tracking-wide uppercase">
+                        Roles Needed <span class="text-lfg-muted/60">(optional)</span>
+                    </label>
+                    <div class="flex gap-2">
+                        <input
+                            v-model="roleInput"
+                            @keydown.enter.prevent="addRole"
+                            type="text"
+                            placeholder="e.g. Tank, Support, DPS"
+                            class="border-lfg-border bg-lfg-bg text-lfg-text placeholder-lfg-muted focus:border-lfg-cyan focus:ring-lfg-cyan flex-1 rounded-md border p-2.5 text-sm focus:ring-1 focus:outline-none"
+                        />
+                        <button
+                            type="button"
+                            @click="addRole"
+                            class="border-lfg-cyan text-lfg-cyan hover:bg-lfg-cyan/10 rounded-md border px-4 text-sm"
+                        >
+                            Add
+                        </button>
+                    </div>
+                    <div v-if="form.roles_needed.length" class="mt-2 flex flex-wrap gap-2">
+                        <span
+                            v-for="(role, i) in form.roles_needed"
+                            :key="i"
+                            class="bg-lfg-bg text-lfg-text flex items-center gap-1.5 rounded-full px-3 py-1 text-xs"
+                        >
+                            {{ role }}
+                            <button
+                                type="button"
+                                @click="removeRole(i)"
+                                class="text-lfg-muted hover:text-lfg-orange"
+                            >
+                                ✕
+                            </button>
+                        </span>
+                    </div>
                 </div>
 
                 <div class="grid grid-cols-2 gap-4">

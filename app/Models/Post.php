@@ -60,7 +60,11 @@ class Post extends Model
     protected $fillable = [
         'game_id', 'user_id', 'title', 'description', 'skill_rank',
         'region', 'timezone', 'availability', 'comm_preference',
-        'join_mode', 'party_size', 'current_members', 'status', 'is_priority',
+        'join_mode', 'party_size', 'current_members', 'status', 'is_priority', 'roles_needed',
+    ];
+
+    protected $casts = [
+        'roles_needed' => 'array',
     ];
 
     public function game()

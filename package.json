@@ -25,6 +25,7 @@
         "vue-tsc": "^3.3.7"
     },
     "dependencies": {
+        "@tabler/icons-vue": "^3.45.0",
         "axios": "^1.18.1"
     }
 }

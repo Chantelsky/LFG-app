@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { Link, usePage, router } from '@inertiajs/vue3';
+import AppLogo from '@/Components/AppLogo.vue';
 
 const page = usePage<{
     auth: { user: { id: number; name: string } };
@@ -16,11 +17,8 @@ function logout() {
     <div class="bg-lfg-bg flex min-h-screen">
         <aside class="border-lfg-border flex w-56 shrink-0 flex-col border-r">
             <div class="px-5 py-6">
-                <Link
-                    href="/browse"
-                    class="text-lfg-text text-lg font-medium tracking-wide uppercase"
-                >
-                    <span class="text-lfg-pink">LFG</span>
+                <Link href="/browse">
+                    <AppLogo size="lg" :show-tagline="true" />
                 </Link>
             </div>
 

@@ -12,7 +12,7 @@ class PostController extends Controller
 {
     public function index()
     {
-        $posts = Post::with('game', 'user')
+        $posts = Post::with('game', 'user', 'partyMembers.user')
             ->where('status', 'open')
             ->latest()
             ->get();
@@ -46,6 +46,8 @@ class PostController extends Controller
             'comm_preference' => 'required|in:mic_required,mic_optional,text_only',
             'join_mode' => 'required|in:auto_accept,manual_review',
             'party_size' => 'required|integer|min:2|max:10',
+            'roles_needed' => 'nullable|array',
+            'roles_needed.*' => 'string|max:50',
         ]);
 
         $game = null;
@@ -93,6 +95,7 @@ class PostController extends Controller
             'join_mode' => $validated['join_mode'],
             'party_size' => $validated['party_size'],
             'current_members' => 1,
+            'roles_needed' => ! empty($validated['roles_needed']) ? $validated['roles_needed'] : null,
         ]);
 
         $post->partyMembers()->create([
