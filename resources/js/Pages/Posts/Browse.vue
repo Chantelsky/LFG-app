@@ -13,11 +13,13 @@ interface Post {
     region: string | null;
     timezone: string | null;
     comm_preference: string;
+    current_members: number;
+    party_size: number;
+    roles_needed: string[] | null;
+    created_at: string;
     game: { name: string; cover_art: string | null; artwork_url: string | null };
     user: { name: string };
     user_id: number;
-    current_members: number;
-    party_size: number;
     party_members: { id: number; user: { id: number; name: string } }[];
 }
 

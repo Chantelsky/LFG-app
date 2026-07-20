@@ -97,7 +97,7 @@ function close() {
             <form @submit.prevent="submit" class="space-y-5">
                 <div class="flex items-stretch gap-4">
                     <div
-                        class="border-lfg-border bg-lfg-bg w-24 flex-shrink-0 overflow-hidden rounded-md border"
+                        class="border-lfg-border bg-lfg-bg w-24 shrink-0 overflow-hidden rounded-md border"
                     >
                         <img
                             v-if="selectedGame.coverUrl"
