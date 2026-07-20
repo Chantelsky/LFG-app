@@ -7,6 +7,7 @@ const props = defineProps<{
 }>();
 
 const page = usePage<{
+    auth: { user: { id: number; name: string } };
     flash: {
         error: string | null;
         success: string | null;

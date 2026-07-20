@@ -22,11 +22,22 @@ class PostController extends Controller
         ]);
     }
 
+    public function show(Post $post)
+    {
+        $post->load('game', 'user', 'partyMembers.user', 'joinRequests.user');
+
+        return Inertia::render('Posts/Show', [
+            'post' => $post,
+        ]);
+    }
+
     public function store(Request $request)
     {
         $validated = $request->validate([
             'game_name' => 'required|string|max:255',
             'igdb_id' => 'nullable|integer',
+            'cover_url' => 'nullable|string',
+            'artwork_url' => 'nullable|string',
             'title' => 'required|string|max:255',
             'skill_rank' => 'nullable|string|max:255',
             'region' => 'nullable|string|max:255',
@@ -53,13 +64,20 @@ class PostController extends Controller
                         'name' => $validated['game_name'],
                         'slug' => $slug,
                         'igdb_id' => $validated['igdb_id'],
+                        'cover_art' => $validated['cover_url'] ?? null,
+                        'artwork_url' => $validated['artwork_url'] ?? null,
                     ]);
                 }
             }
         } else {
             $game = Game::firstOrCreate(
                 ['slug' => Str::slug($validated['game_name'])],
-                ['name' => $validated['game_name'], 'is_custom' => true]
+                [
+                    'name' => $validated['game_name'],
+                    'is_custom' => true,
+                    'cover_art' => $validated['cover_url'] ?? null,
+                    'artwork_url' => $validated['artwork_url'] ?? null,
+                ]
             );
         }
 

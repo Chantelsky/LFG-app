@@ -6,15 +6,27 @@ interface IgdbGame {
     id: number;
     name: string;
     cover?: { url: string };
+    artworks?: { url: string }[];
 }
 
 const props = defineProps<{
-    modelValue: { igdb_id: number | null; name: string; coverUrl: string | null };
-    hasError?: boolean;
+    modelValue: {
+        igdb_id: number | null;
+        name: string;
+        coverUrl: string | null;
+        artworkUrl: string | null;
+    };
 }>();
 
 const emit = defineEmits<{
-    'update:modelValue': [value: { igdb_id: number | null; name: string; coverUrl: string | null }];
+    'update:modelValue': [
+        value: {
+            igdb_id: number | null;
+            name: string;
+            coverUrl: string | null;
+            artworkUrl: string | null;
+        },
+    ];
 }>();
 
 const query = ref(props.modelValue.name || '');
@@ -30,7 +42,7 @@ watch(query, (newQuery) => {
         return;
     }
 
-    emit('update:modelValue', { igdb_id: null, name: newQuery, coverUrl: null });
+    emit('update:modelValue', { igdb_id: null, name: newQuery, coverUrl: null, artworkUrl: null });
 
     if (debounceTimer) clearTimeout(debounceTimer);
 
@@ -54,14 +66,20 @@ watch(query, (newQuery) => {
     }, 400);
 });
 
+function artworkUrl(game: IgdbGame): string | null {
+    if (!game.artworks?.length) return null;
+    return `https:${game.artworks[0].url.replace('t_thumb', 't_1080p')}`;
+}
+
 function selectGame(game: IgdbGame) {
-    suppressNextWatch = true;
     query.value = game.name;
     showDropdown.value = false;
+    suppressNextWatch = true;
     emit('update:modelValue', {
         igdb_id: game.id,
         name: game.name,
         coverUrl: coverUrl(game),
+        artworkUrl: artworkUrl(game),
     });
 }
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\JoinRequest;
+use App\Models\PartyMember;
 use App\Models\Post;
 
 class JoinRequestController extends Controller
@@ -77,5 +78,49 @@ class JoinRequestController extends Controller
         $joinRequest->update(['status' => 'declined']);
 
         return back()->with('success', 'Request declined.');
+    }
+
+    public function leave(Post $post)
+    {
+        $member = $post->partyMembers()->where('user_id', auth()->id())->first();
+
+        if (! $member) {
+            return back()->with('error', 'You are not a member of this party.');
+        }
+
+        if ($member->is_host) {
+            return back()->with('error', 'The host cannot leave their own party. Close the post instead.');
+        }
+
+        $member->delete();
+
+        $post->decrement('current_members');
+
+        if ($post->status === 'filled') {
+            $post->update(['status' => 'open']);
+        }
+
+        return back()->with('success', 'You left the party.');
+    }
+
+    public function removeMember(Post $post, PartyMember $partyMember)
+    {
+        if ($post->user_id !== auth()->id()) {
+            return back()->with('error', 'Only the host can remove members.');
+        }
+
+        if ($partyMember->is_host) {
+            return back()->with('error', 'The host cannot be removed.');
+        }
+
+        $partyMember->delete();
+
+        $post->decrement('current_members');
+
+        if ($post->status === 'filled') {
+            $post->update(['status' => 'open']);
+        }
+
+        return back()->with('success', 'Member removed.');
     }
 }

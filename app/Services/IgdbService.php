@@ -28,7 +28,7 @@ class IgdbService
             'Client-ID' => config('services.igdb.client_id'),
             'Authorization' => "Bearer {$token}",
         ])->withBody(
-            "search \"{$query}\"; fields name, cover.url; limit 10;",
+            "search \"{$query}\"; fields name, cover.url, artworks.url; limit 10;",
             'text/plain'
         )->post('https://api.igdb.com/v4/games');
 

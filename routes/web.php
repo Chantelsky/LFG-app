@@ -17,8 +17,6 @@ Route::get('/', function () {
     ]);
 });
 
-Route::get('/browse', [PostController::class, 'index'])->name('posts.index');
-
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
@@ -28,9 +26,14 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
+    Route::get('/browse', [PostController::class, 'index'])->name('posts.index');
+
     Route::get('/my-posts', [PostController::class, 'myPosts'])->name('posts.my-posts');
     Route::post('/posts', [PostController::class, 'store'])->name('posts.store');
+    Route::get('/posts/{post}', [PostController::class, 'show'])->name('posts.show');
     Route::post('/posts/{post}/join-requests', [JoinRequestController::class, 'store'])->name('join-requests.store');
+    Route::delete('/posts/{post}/members/{partyMember}', [JoinRequestController::class, 'removeMember'])->name('party-members.remove');
+    Route::delete('/posts/{post}/leave', [JoinRequestController::class, 'leave'])->name('posts.leave');
 
     Route::get('/games/search', [GameController::class, 'search'])->name('games.search');
 

@@ -15,11 +15,14 @@ const selectedGame = ref<{ igdb_id: number | null; name: string; coverUrl: strin
     igdb_id: null,
     name: '',
     coverUrl: null,
+    artworkUrl: null,
 });
 
 const form = useForm({
     game_name: '',
     igdb_id: null as number | null,
+    cover_url: null as string | null,
+    artwork_url: null as string | null,
     title: '',
     skill_rank: '',
     region: '',
@@ -35,6 +38,8 @@ function submit() {
         ...data,
         igdb_id: selectedGame.value.igdb_id,
         game_name: selectedGame.value.name,
+        cover_url: selectedGame.value.coverUrl,
+        artwork_url: selectedGame.value.artworkUrl,
     })).post('/posts', {
         onSuccess: () => {
             form.reset();
@@ -47,7 +52,7 @@ function submit() {
 function close() {
     form.reset();
     form.clearErrors();
-    selectedGame.value = { igdb_id: null, name: '', coverUrl: null };
+    selectedGame.value = { igdb_id: null, name: '', coverUrl: null, artworkUrl: null };
     emit('close');
 }
 </script>

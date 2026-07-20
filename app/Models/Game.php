@@ -32,13 +32,17 @@ use Illuminate\Support\Carbon;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Game whereSlug($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Game whereUpdatedAt($value)
  *
+ * @property string|null $artwork_url
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Game whereArtworkUrl($value)
+ *
  * @mixin \Eloquent
  */
 class Game extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'slug', 'igdb_id', 'cover_art', 'is_custom'];
+    protected $fillable = ['name', 'slug', 'igdb_id', 'cover_art', 'artwork_url', 'is_custom'];
 
     public function posts()
     {
