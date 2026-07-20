@@ -50,6 +50,9 @@ use Illuminate\Support\Carbon;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Post whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Post whereUserId($value)
  *
+ * @property-read Collection<int, PartyMember> $partyMembers
+ * @property-read int|null $party_members_count
+ *
  * @mixin \Eloquent
  */
 class Post extends Model
@@ -73,5 +76,10 @@ class Post extends Model
     public function joinRequests()
     {
         return $this->hasMany(JoinRequest::class);
+    }
+
+    public function partyMembers()
+    {
+        return $this->hasMany(PartyMember::class);
     }
 }

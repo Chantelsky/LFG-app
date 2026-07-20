@@ -71,7 +71,8 @@ test('a non-host cannot accept a join request', function () {
 
     $response = $this->actingAs($requester)->patch("/join-requests/{$joinRequest->id}/accept");
 
-    $response->assertForbidden();
+    $response->assertRedirect();
+    $response->assertSessionHas('error', 'Only the host can accept requests.');
 });
 
 test('an already-handled request cannot be accepted again', function () {
@@ -81,5 +82,6 @@ test('an already-handled request cannot be accepted again', function () {
 
     $response = $this->actingAs($host)->patch("/join-requests/{$joinRequest->id}/accept");
 
-    $response->assertStatus(409);
+    $response->assertRedirect();
+    $response->assertSessionHas('error', 'This request has already been handled.');
 });

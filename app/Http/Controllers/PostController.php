@@ -77,6 +77,11 @@ class PostController extends Controller
             'current_members' => 1,
         ]);
 
+        $post->partyMembers()->create([
+            'user_id' => auth()->id(),
+            'is_host' => true,
+        ]);
+
         return redirect()->route('posts.index')->with('success', 'Lobby posted!');
     }
 

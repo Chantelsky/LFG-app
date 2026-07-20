@@ -38,11 +38,20 @@ class JoinRequestController extends Controller
     {
         $post = $joinRequest->post;
 
-        abort_if($post->user_id !== auth()->id(), 403, 'Only the host can accept requests.');
+        if ($post->user_id !== auth()->id()) {
+            return back()->with('error', 'Only the host can accept requests.');
+        }
 
-        abort_if($joinRequest->status !== 'pending', 409, 'This request has already been handled.');
+        if ($joinRequest->status !== 'pending') {
+            return back()->with('error', 'This request has already been handled.');
+        }
 
         $joinRequest->update(['status' => 'accepted']);
+
+        $post->partyMembers()->create([
+            'user_id' => $joinRequest->user_id,
+            'is_host' => false,
+        ]);
 
         $post->increment('current_members');
 
@@ -50,19 +59,23 @@ class JoinRequestController extends Controller
             $post->update(['status' => 'filled']);
         }
 
-        return redirect()->back();
+        return back()->with('success', 'Request accepted!');
     }
 
     public function decline(JoinRequest $joinRequest)
     {
         $post = $joinRequest->post;
 
-        abort_if($post->user_id !== auth()->id(), 403, 'Only the host can decline requests.');
+        if ($post->user_id !== auth()->id()) {
+            return back()->with('error', 'Only the host can decline requests.');
+        }
 
-        abort_if($joinRequest->status !== 'pending', 409, 'This request has already been handled.');
+        if ($joinRequest->status !== 'pending') {
+            return back()->with('error', 'This request has already been handled.');
+        }
 
         $joinRequest->update(['status' => 'declined']);
 
-        return redirect()->back();
+        return back()->with('success', 'Request declined.');
     }
 }
