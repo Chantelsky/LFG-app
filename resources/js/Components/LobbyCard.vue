@@ -17,7 +17,7 @@ interface PartyMember {
 }
 
 interface Post {
-    id: number;
+    uuid: string;
     title: string;
     skill_rank: string | null;
     region: string | null;
@@ -39,8 +39,12 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits<{
-    requestToJoin: [postId: number];
+    requestToJoin: [postId: string];
 }>();
+
+const isAlreadyMember = computed(() =>
+    props.post.party_members.some((m) => m.user.id === props.currentUserId)
+);
 
 const avatarColors = ['#FF2E88', '#00E5FF', '#FFC700', '#9B6BFF', '#3ADC8C'];
 
@@ -166,17 +170,24 @@ function getRoleIcon(role: string) {
 
                 <Link
                     v-if="post.user_id === currentUserId"
-                    :href="`/posts/${post.id}`"
-                    class="border-lfg-pink text-lfg-pink hover:bg-lfg-pink/10 mt-2 flex h-12 cursor-pointer items-center justify-center rounded-xl border text-sm font-semibold"
+                    :href="`/posts/${post.uuid}`"
+                    class="border-lfg-pink text-lfg-pink hover:bg-lfg-pink/10 flex-shrink-0 cursor-pointer rounded-md border px-5 py-2 text-xs font-medium"
                 >
                     Manage
                 </Link>
+                <Link
+                    v-else-if="isAlreadyMember"
+                    :href="`/posts/${post.uuid}`"
+                    class="border-lfg-cyan text-lfg-cyan hover:bg-lfg-cyan/10 flex-shrink-0 cursor-pointer rounded-md border px-5 py-2 text-xs font-medium"
+                >
+                    View Squad
+                </Link>
                 <button
                     v-else
-                    @click="emit('requestToJoin', post.id)"
-                    class="border-lfg-cyan text-lfg-cyan hover:bg-lfg-cyan/10 mt-2 flex h-12 cursor-pointer items-center justify-center rounded-xl border text-sm font-semibold"
+                    @click="emit('requestToJoin', post.uuid)"
+                    class="border-lfg-cyan text-lfg-cyan hover:bg-lfg-cyan/10 flex-shrink-0 cursor-pointer rounded-md border px-5 py-2 text-xs font-medium"
                 >
-                    Join Lobby
+                    Request to Join
                 </button>
             </div>
         </div>

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\GameController;
 use App\Http\Controllers\JoinRequestController;
+use App\Http\Controllers\MessageController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
@@ -39,6 +40,8 @@ Route::middleware('auth')->group(function () {
 
     Route::patch('/join-requests/{joinRequest}/accept', [JoinRequestController::class, 'accept'])->name('join-requests.accept');
     Route::patch('/join-requests/{joinRequest}/decline', [JoinRequestController::class, 'decline'])->name('join-requests.decline');
+
+    Route::post('/posts/{post}/messages', [MessageController::class, 'store'])->name('messages.store');
 });
 
 require __DIR__.'/auth.php';

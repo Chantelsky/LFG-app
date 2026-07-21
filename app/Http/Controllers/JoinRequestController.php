@@ -26,6 +26,27 @@ class JoinRequestController extends Controller
             return back()->with('error', 'You have already requested to join this lobby.');
         }
 
+        if ($post->join_mode === 'auto_accept') {
+            JoinRequest::create([
+                'post_id' => $post->id,
+                'user_id' => auth()->id(),
+                'status' => 'accepted',
+            ]);
+
+            $post->partyMembers()->create([
+                'user_id' => auth()->id(),
+                'is_host' => false,
+            ]);
+
+            $post->increment('current_members');
+
+            if ($post->current_members >= $post->party_size) {
+                $post->update(['status' => 'filled']);
+            }
+
+            return redirect()->route('posts.show', $post)->with('success', 'Joined the lobby!');
+        }
+
         JoinRequest::create([
             'post_id' => $post->id,
             'user_id' => auth()->id(),

@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Str;
 
 /**
  * @property int $id
@@ -67,6 +68,18 @@ class Post extends Model
         'roles_needed' => 'array',
     ];
 
+    protected static function booted()
+    {
+        static::creating(function ($post) {
+            $post->uuid = (string) Str::uuid();
+        });
+    }
+
+    public function getRouteKeyName()
+    {
+        return 'uuid';
+    }
+
     public function game()
     {
         return $this->belongsTo(Game::class);
@@ -85,5 +98,10 @@ class Post extends Model
     public function partyMembers()
     {
         return $this->hasMany(PartyMember::class);
+    }
+
+    public function messages()
+    {
+        return $this->hasMany(Message::class);
     }
 }

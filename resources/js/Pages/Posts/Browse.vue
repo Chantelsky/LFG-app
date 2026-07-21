@@ -7,7 +7,7 @@ import AppLayout from '@/Layouts/AppLayout.vue';
 import LobbyCard from '@/Components/LobbyCard.vue';
 
 interface Post {
-    id: number;
+    uuid: string;
     title: string;
     skill_rank: string | null;
     region: string | null;
@@ -35,7 +35,7 @@ const currentUserId = page.props.auth.user.id;
 
 const showCreateModal = ref(false);
 
-function requestToJoin(postId: number) {
+function requestToJoin(postId: string) {
     router.post(`/posts/${postId}/join-requests`);
 }
 
@@ -84,7 +84,7 @@ const filteredPosts = computed(() => {
                 <div class="flex max-w-6xl flex-col gap-4">
                     <LobbyCard
                         v-for="post in filteredPosts"
-                        :key="post.id"
+                        :key="post.uuid"
                         :post="post"
                         :current-user-id="currentUserId"
                         @request-to-join="requestToJoin"

@@ -14,7 +14,7 @@ interface JoinRequest {
 }
 
 interface Post {
-    id: number;
+    uuid: string;
     title: string;
     status: string;
     current_members: number;
@@ -41,7 +41,7 @@ function decline(requestId: number) {
         <div class="p-8">
             <h1 class="mb-4 text-2xl font-bold">My Posts</h1>
 
-            <div v-for="post in posts" :key="post.id" class="mb-4 rounded border p-4">
+            <div v-for="post in posts" :key="post.uuid" class="mb-4 rounded border p-4">
                 <p class="text-sm text-gray-500">{{ post.game.name }}</p>
                 <h2 class="font-semibold">{{ post.title }}</h2>
                 <p class="text-sm">

@@ -26,6 +26,13 @@ class PostController extends Controller
     {
         $post->load('game', 'user', 'partyMembers.user', 'joinRequests.user');
 
+        $isMember = $post->partyMembers()->where('user_id', auth()->id())->exists();
+
+        $post->setRelation('messages', $isMember
+            ? $post->messages()->with('user')->get()
+            : collect()
+        );
+
         return Inertia::render('Posts/Show', [
             'post' => $post,
         ]);
