@@ -1,0 +1,6 @@
+<svg width="64" height="64" viewBox="0 0 130 140" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="LFG logo">
+    <rect width="130" height="140" fill="#0a0a0f" />
+    <path d="M0 70 L45 20 L60 20 L15 70 L60 120 L45 120 Z" fill="#FF2E88" />
+    <path d="M35 70 L80 20 L95 20 L50 70 L95 120 L80 120 Z" fill="#00E5FF" opacity="0.85" />
+    <path d="M70 70 L115 20 L130 20 L85 70 L130 120 L115 120 Z" fill="#9B6BFF" opacity="0.85" />
+</svg>
